@@ -1,19 +1,38 @@
 package com.mysite.sbb.question;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.mysite.sbb.answer.CommentService;
+import com.mysite.sbb.answer.CommentDto;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionApiController {
 
     private final QuestionService questionService;
+    private final CommentService commentService;
 
-    public QuestionApiController(QuestionService questionService) {
+    public QuestionApiController(QuestionService questionService, CommentService commentService) {
         this.questionService = questionService;
+        this.commentService = commentService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionDto> getQuestionById(@PathVariable Long id) {
+        Question question = questionService.getQuestion(id.intValue());
+        if (question == null) {
+            return ResponseEntity.notFound().build();
+        }
+        QuestionDto dto = new QuestionDto();
+        dto.setId(question.getId());
+        dto.setSubject(question.getSubject());
+        dto.setContent(question.getContent());
+        dto.setCreateDate(question.getCreateDate());
+        dto.setAuthor(question.getAuthor() != null ? question.getAuthor().getUsername() : "익명");
+        dto.setRecommendCount(question.getRecommendCount());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
@@ -21,7 +40,6 @@ public class QuestionApiController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "kw", defaultValue = "") String keyword
     ) {
-        // Question 데이터를 DTO로 변환하여 반환
         return questionService.getList(page, keyword).map(question -> {
             QuestionDto dto = new QuestionDto();
             dto.setId(question.getId());
@@ -29,8 +47,15 @@ public class QuestionApiController {
             dto.setContent(question.getContent());
             dto.setCreateDate(question.getCreateDate());
             dto.setAuthor(question.getAuthor() != null ? question.getAuthor().getUsername() : "익명");
-            dto.setRecommendCount(question.getRecommendCount()); // 추천수
+            dto.setRecommendCount(question.getRecommendCount());
             return dto;
         });
+    }
+
+    // 댓글 목록 가져오기
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentDto>> getComments(@PathVariable Integer id) {
+        List<CommentDto> comments = commentService.getCommentsByQuestionId(id);
+        return ResponseEntity.ok(comments);
     }
 }
