@@ -26,8 +26,8 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 				.cors().and() // CORS 설정
-				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**").permitAll() // REST API와 정적 리소스 허용
+				.authorizeHttpRequests((requests) -> requests
+						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**", "/api/**").permitAll() // REST API와 정적 리소스 허용
 						.anyRequest().authenticated() // 나머지 요청은 인증 필요
 				)
 				.csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/**")) // REST API와 H2 콘솔의 CSRF 비활성화
@@ -38,25 +38,24 @@ public class SecurityConfig {
 						.loginProcessingUrl("/process-login") // 로그인 처리 경로
 						.defaultSuccessUrl("/") // 로그인 성공 시 이동할 경로
 						.failureUrl("/page-login.html?error=true") // 로그인 실패 시 이동할 경로
-						.permitAll()
+						.permitAll() // 로그인 페이지는 모든 사용자에게 허용
 				)
 				.logout((logout) -> logout
 						.logoutUrl("/logout") // 로그아웃 처리 URL
 						.logoutSuccessUrl("/") // 로그아웃 성공 후 이동할 URL
 						.invalidateHttpSession(true) // 세션 무효화
 						.deleteCookies("JSESSIONID") // 쿠키 삭제
+						.permitAll() // 로그아웃도 모든 사용자에게 허용
 				);
 
 		return http.build();
 	}
 
-
-
 	// CORS 설정
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:5501", "http://127.0.0.1:5501")); // 프론트엔드 주소
+		configuration.setAllowedOriginPatterns(List.of("http://localhost:5501", "http://127.0.0.1:5501")); // 프론트엔드 주소
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
 		configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
 		configuration.setAllowCredentials(true); // 쿠키 허용
