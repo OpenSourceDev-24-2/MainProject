@@ -109,6 +109,7 @@
     <!-- END WRAPPER -->
 
     <script>
+      // 수정된 API 호출 코드
       document
         .getElementById("login-form")
         .addEventListener("submit", async function (event) {
@@ -134,7 +135,12 @@
             if (response.ok) {
               const data = await response.json();
               alert(data.message); // 로그인 성공 메시지
-              window.location.href = "../index.html"; // 리다이렉트
+
+              // 사용자 아이디를 로컬 저장소에 저장
+              localStorage.setItem("username", username);
+
+              // 메인 페이지로 리다이렉트
+              window.location.href = "http://127.0.0.1:5501/index.html"; // Live Server의 메인 페이지 URL
             } else {
               const errorText = await response.text();
               alert("로그인 실패: " + errorText);

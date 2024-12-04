@@ -52,51 +52,69 @@
                       <img src="../img/logo.png" alt="Klorofil Logo" />
                     </a>
                   </div>
-                  <p class="lead">Login to your account</p>
+                  <p class="lead">회원가입</p>
                 </div>
-                <form class="form-auth-small" action="index.php">
+                <form id="register-form" class="form-auth-small">
+                  <!-- Email Input field -->
                   <div class="form-group">
-                    <label for="signin-email" class="control-label sr-only"
+                    <label for="signup-email" class="control-label sr-only"
                       >Email</label
                     >
                     <input
                       type="email"
                       class="form-control"
-                      id="signin-email"
-                      value="samuel.gold@domain.com"
-                      placeholder="Email"
+                      id="signup-email"
+                      placeholder="이메일"
+                      required
                     />
                   </div>
+                  <!-- ID Input field -->
                   <div class="form-group">
-                    <label for="signin-password" class="control-label sr-only"
+                    <label for="signup-id" class="control-label sr-only"
+                      >ID</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="signup-id"
+                      placeholder="아이디"
+                      required
+                    />
+                  </div>
+                  <!-- Password Input field -->
+                  <div class="form-group">
+                    <label for="signup-password" class="control-label sr-only"
                       >Password</label
                     >
                     <input
                       type="password"
                       class="form-control"
-                      id="signin-password"
-                      value="thisisthepassword"
-                      placeholder="Password"
+                      id="signup-password"
+                      placeholder="비밀번호"
+                      required
                     />
                   </div>
-                  <div class="form-group clearfix">
-                    <label class="fancy-checkbox element-left">
-                      <input type="checkbox" />
-                      <span>Remember me</span>
-                    </label>
+                  <!-- Password Confirmation Input field -->
+                  <div class="form-group">
+                    <label for="confirm_password" class="control-label sr-only"
+                      >Confirm Password</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirm_password"
+                      placeholder="비밀번호 확인"
+                      required
+                    />
+                    <small id="message" class="form-text"></small>
                   </div>
+                  <!-- Submit button -->
                   <button
                     type="submit"
                     class="btn btn-primary btn-lg btn-block"
                   >
-                    LOGIN
+                    회원가입
                   </button>
-                  <div class="bottom">
-                    <span class="helper-text"
-                      ><i class="fa fa-lock"></i>
-                      <a href="#">Forgot password?</a></span
-                    >
-                  </div>
                 </form>
               </div>
             </div>
@@ -113,5 +131,78 @@
       </div>
     </div>
     <!-- END WRAPPER -->
+
+    <script>
+      // 비밀번호 확인 기능
+      document
+        .getElementById("confirm_password")
+        .addEventListener("input", function () {
+          var password = document.getElementById("signup-password").value;
+          var confirmPassword =
+            document.getElementById("confirm_password").value;
+          var message = document.getElementById("message");
+
+          if (confirmPassword === password) {
+            message.textContent = "비밀번호가 일치합니다.";
+            message.style.color = "green";
+          } else {
+            message.textContent = "비밀번호가 일치하지 않습니다.";
+            message.style.color = "red";
+          }
+        });
+
+      // 회원가입 폼 제출 시 REST API 호출
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // 폼의 기본 제출 동작을 방지합니다.
+
+          // 사용자 입력 값 가져오기
+          const email = document.getElementById("signup-email").value;
+          const username = document.getElementById("signup-id").value;
+          const password = document.getElementById("signup-password").value;
+          const confirmPassword =
+            document.getElementById("confirm_password").value;
+
+          // 비밀번호와 비밀번호 확인이 일치하지 않을 때 처리
+          if (password !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+          }
+
+          try {
+            // REST API 호출
+            const response = await fetch(
+              "http://localhost:8080/api/user/signup",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  username,
+                  email,
+                  password1: password,
+                  password2: confirmPassword,
+                }), // JSON 데이터 전송
+              }
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+              alert(data.message); // 회원가입 성공 메시지
+
+              // 회원가입 후 로그인 페이지로 이동
+              window.location.href = "../board/page-login.html";
+            } else {
+              const errorText = await response.text();
+              alert("회원가입 실패: " + errorText);
+            }
+          } catch (error) {
+            console.error("서버와 연결할 수 없습니다:", error);
+            alert("서버와 연결할 수 없습니다. 네트워크를 확인하세요.");
+          }
+        });
+    </script>
   </body>
 </html>
