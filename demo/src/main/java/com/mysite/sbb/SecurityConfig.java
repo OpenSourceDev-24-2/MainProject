@@ -14,6 +14,10 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 import java.util.List;
 
@@ -23,42 +27,56 @@ import java.util.List;
 public class SecurityConfig {
 
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-				.cors().and() // CORS 설정
-				.authorizeHttpRequests((requests) -> requests
-						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**", "/api/**").permitAll() // REST API와 정적 리소스 허용
-						.anyRequest().authenticated() // 나머지 요청은 인증 필요
-				)
-				.csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/**")) // REST API와 H2 콘솔의 CSRF 비활성화
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.authorizeRequests((requests) -> requests
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers(HttpMethod.DELETE, "/api/answers/**").authenticated() // DELETE 요청 인증 필요
+						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**", "/api/**", "/api/questions/create").permitAll()
+						.anyRequest().authenticated())
+				.csrf((csrf) -> csrf
+						.ignoringRequestMatchers("/h2-console/**", "/api/**")
+						.disable())
 				.headers((headers) -> headers.addHeaderWriter(
-						new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))) // H2 콘솔 허용
+						new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
 				.formLogin((formLogin) -> formLogin
-						.loginPage("/page-login.html") // 사용자 정의 로그인 페이지
-						.loginProcessingUrl("/process-login") // 로그인 처리 경로
-						.defaultSuccessUrl("/") // 로그인 성공 시 이동할 경로
-						.failureUrl("/page-login.html?error=true") // 로그인 실패 시 이동할 경로
-						.permitAll() // 로그인 페이지는 모든 사용자에게 허용
-				)
+						.loginPage("/page-login.html")
+						.loginProcessingUrl("/process-login")
+						.defaultSuccessUrl("/")
+						.failureUrl("/page-login.html?error=true")
+						.permitAll())
 				.logout((logout) -> logout
-						.logoutUrl("/logout") // 로그아웃 처리 URL
-						.logoutSuccessUrl("/") // 로그아웃 성공 후 이동할 URL
-						.invalidateHttpSession(true) // 세션 무효화
-						.deleteCookies("JSESSIONID") // 쿠키 삭제
-						.permitAll() // 로그아웃도 모든 사용자에게 허용
-				);
-
+						.logoutUrl("/logout")
+						.logoutSuccessUrl("/")
+						.invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID")
+						.permitAll());
 		return http.build();
 	}
 
-	// CORS 설정
 	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
+	public HttpFirewall httpFirewall() {
+		StrictHttpFirewall firewall = new StrictHttpFirewall();
+		firewall.setAllowSemicolon(true); // ";" 허용
+		return firewall;
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOriginPatterns(List.of("http://localhost:5501", "http://127.0.0.1:5501")); // 프론트엔드 주소
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
-		configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
-		configuration.setAllowCredentials(true); // 쿠키 허용
+
+		// 명시적인 Origin 허용 (setAllowedOrigins와 setAllowedOriginPatterns는 함께 사용하지 않습니다)
+		configuration.setAllowedOriginPatterns(List.of("http://127.0.0.1:*"));
+
+		// 허용할 HTTP 메서드 추가
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		// 허용할 헤더
+		configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+
+		// 자격 증명 허용
+		configuration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
@@ -75,4 +93,6 @@ public class SecurityConfig {
 			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
+
 }
+

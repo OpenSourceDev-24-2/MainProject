@@ -228,8 +228,8 @@
         .catch((error) => console.error("Error:", error));
     </script>
     <script>
-      // 로컬 저장소에서 로그인된 사용자 정보 가져오기
-      const username = localStorage.getItem("username");
+      // 세션 저장소에서 로그인된 사용자 정보 가져오기
+      const username = sessionStorage.getItem("username");
       const userInfo = document.getElementById("user-info");
 
       if (username) {
@@ -245,7 +245,7 @@
 
         // 로그아웃 버튼 클릭 이벤트 추가
         document.getElementById("logout-btn").addEventListener("click", () => {
-          localStorage.removeItem("username"); // 로컬 저장소에서 사용자 정보 제거
+          sessionStorage.removeItem("username"); // 세션 저장소에서 사용자 정보 제거
           location.reload(); // 페이지 새로고침
         });
       } else {
@@ -253,6 +253,7 @@
         userInfo.innerHTML = `
           <li><a
               href="/board/page-login.html"
+              id="login-btn"
               class="navbar-btn nav-button wow bounceInRight login"
               data-wow-delay="0.8s"
               style="text-decoration: none; display: inline-block; text-align: center;"
@@ -273,18 +274,20 @@
 
     <script>
       function goToBoard(boardUrl) {
-        // 로컬 저장소에서 로그인된 사용자 정보 가져오기
-        const username = localStorage.getItem("username");
+        // 세션 저장소에서 로그인된 사용자 정보 가져오기
+        const username = sessionStorage.getItem("username");
 
-        if (username) {
-          // 로그인 상태일 경우에만 게시판으로 이동
-          window.location.href = boardUrl;
-        } else {
-          // 로그인 상태가 아닐 경우 로그인 페이지로 안내
-          alert("게시판에 접근하려면 로그인해야 합니다.");
-          window.location.href = "/board/page-login.html";
-        }
+        window.location.href = boardUrl;
       }
+
+      // 로그인 버튼 클릭 시 현재 URL을 저장하고 로그인 페이지로 이동
+      document.getElementById("login-btn").addEventListener("click", () => {
+        // 현재 페이지 URL 저장
+        sessionStorage.setItem("previousPage", window.location.href);
+
+        // 로그인 페이지로 이동
+        window.location.href = "/board/page-login.html";
+      });
     </script>
   </body>
 </html>

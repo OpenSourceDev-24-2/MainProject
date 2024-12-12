@@ -132,7 +132,7 @@
                     class="img-circle"
                     alt="Avatar"
                   />
-                  <span id="username-display">Samuel</span>
+                  <span id="username-display">Unknown</span>
                   <i class="icon-submenu lnr lnr-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
@@ -315,7 +315,7 @@
     <!-- JavaScript -->
     <script>
       // API 호출하여 질문 데이터를 가져와 테이블에 표시
-      fetch("http://localhost:8080/api/questions")
+      fetch("http://localhost:8080/api/questions?page=0")
         .then((response) => response.json())
         .then((data) => {
           const tableBody = document.getElementById("question-list");
@@ -326,7 +326,10 @@
 
             // 제목 열
             const titleCell = document.createElement("td");
-            titleCell.textContent = question.subject;
+            const titleLink = document.createElement("a");
+            titleLink.href = `question-detail.html?id=${question.id}`;
+            titleLink.textContent = question.subject;
+            titleCell.appendChild(titleLink);
             row.appendChild(titleCell);
 
             // 추천수 열
@@ -336,7 +339,9 @@
 
             // 작성자 열
             const authorCell = document.createElement("td");
-            authorCell.textContent = question.author;
+            authorCell.textContent = question.author
+              ? question.author.username
+              : "익명"; // `username` 값 출력
             row.appendChild(authorCell);
 
             // 작성일 열
@@ -372,7 +377,7 @@
                 question.subject
               }</a></td>
                 <td>${question.recommendCount}</td>
-                <td>${question.author}</td>
+                <td>${question.author ? question.author.username : "익명"}</td>
                 <td>${new Date(question.createDate).toLocaleString()}</td>
               `;
               tableBody.appendChild(row);
@@ -408,7 +413,7 @@
 
     <script>
       // 로컬 저장소에서 로그인된 사용자 정보 가져오기
-      const username = localStorage.getItem("username");
+      const username = sessionStorage.getItem("username");
 
       if (username) {
         // 로그인 상태일 경우 사용자 이름을 표시
@@ -416,12 +421,25 @@
 
         // 로그아웃 버튼 클릭 이벤트 추가
         document.getElementById("logout-btn").addEventListener("click", () => {
-          localStorage.removeItem("username"); // 로컬 저장소에서 사용자 정보 제거
+          sessionStorage.removeItem("username"); // 로컬 저장소에서 사용자 정보 제거
           window.location.href = "../index.html"; // 로그아웃 후 메인 페이지로 리다이렉트
         });
       } else {
-        // 비로그인 상태일 경우 로그인 페이지로 리다이렉트
-        window.location.href = "/board/page-login.html";
+        // 비로그인 상태일 경우 사용자 이름을 "Unknown"으로 표시
+        document.getElementById("username-display").textContent = "Unknown";
+
+        // 로그아웃 버튼의 텍스트를 "로그인"으로 설정
+        const loginBtn = document.getElementById("logout-btn");
+        loginBtn.textContent = "로그인";
+
+        // 로그인 버튼 클릭 시 현재 URL을 저장하고 로그인 페이지로 이동
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          // 현재 페이지 URL 저장
+          sessionStorage.setItem("previousPage", window.location.href);
+
+          // 로그인 페이지로 이동
+          window.location.href = "/board/page-login.html";
+        });
       }
     </script>
   </body>

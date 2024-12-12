@@ -115,7 +115,7 @@
                     src="assets/img/user.png"
                     class="img-circle"
                     alt="Avatar" />
-                  <span>Samuel</span>
+                  <span id="username-display">Unknown</span>
                   <i class="icon-submenu lnr lnr-chevron-down"></i
                 ></a>
                 <ul class="dropdown-menu">
@@ -235,14 +235,14 @@
                 <hr />
                 <div class="well">
                   <h4>댓글</h4>
-                  <ul id="comments-list" class="list-unstyled">
+                  <ul id="answers-list" class="list-unstyled">
                     <!-- 댓글이 여기에 동적으로 추가됩니다 -->
                   </ul>
                   <hr />
-                  <form id="comment-form">
+                  <form id="answer-form">
                     <div class="form-group">
                       <textarea
-                        id="comment-content"
+                        id="answer-content"
                         class="form-control"
                         rows="3"
                         placeholder="댓글을 입력하세요..."
@@ -294,7 +294,7 @@
             document.getElementById("post-content").textContent = data.content;
 
             // 댓글 로드
-            loadComments();
+            loadAnswers();
           })
           .catch((error) =>
             console.error("게시글 데이터를 가져오는 중 오류 발생:", error)
@@ -302,38 +302,42 @@
 
         // 댓글 작성 이벤트 등록
         document
-          .getElementById("comment-form")
+          .getElementById("answer-form")
           .addEventListener("submit", (event) => {
             event.preventDefault(); // 폼 기본 동작 방지
-            createComment();
+            createAnswer();
           });
       });
 
       // 댓글 목록 가져오기
-      function loadComments() {
-        fetch(`http://localhost:8080/api/questions/${postId}/comments`)
+      function loadAnswers() {
+        fetch(`http://localhost:8080/api/questions/${postId}/answers`)
           .then((response) => response.json())
-          .then((comments) => {
-            const commentsList = document.getElementById("comments-list");
-            commentsList.innerHTML = ""; // 기존 댓글 초기화
+          .then((answers) => {
+            const answersList = document.getElementById("answers-list");
+            answersList.innerHTML = ""; // 기존 댓글 초기화
 
-            comments.forEach((comment) => {
-              const commentItem = document.createElement("li");
-              commentItem.className = "comment-item";
-              commentItem.innerHTML = `
-          <strong>${comment.author}:</strong> ${comment.content}
-          <button class="btn btn-sm btn-danger delete-comment-btn" data-id="${comment.id}">
+            answers.forEach((answer) => {
+              const answerItem = document.createElement("li");
+              answerItem.className = "answer-item";
+              answerItem.innerHTML = `
+          <strong>${
+            answer.author ? answer.author.username : "익명"
+          }:</strong> ${answer.content}
+          <button class="btn btn-sm btn-danger delete-answer-btn" data-id="${
+            answer.id
+          }">
             삭제
           </button>
         `;
-              commentsList.appendChild(commentItem);
+              answersList.appendChild(answerItem);
             });
 
             // 삭제 버튼 이벤트 등록
-            document.querySelectorAll(".delete-comment-btn").forEach((btn) => {
+            document.querySelectorAll(".delete-answer-btn").forEach((btn) => {
               btn.addEventListener("click", () => {
-                const commentId = btn.getAttribute("data-id");
-                deleteComment(commentId);
+                const answerId = btn.getAttribute("data-id");
+                deleteAnswer(answerId);
               });
             });
           })
@@ -343,10 +347,10 @@
       }
 
       // 댓글 작성
-      function createComment() {
-        const content = document.getElementById("comment-content").value;
+      function createAnswer() {
+        const content = document.getElementById("answer-content").value;
 
-        fetch(`http://localhost:8080/api/questions/${postId}/comments`, {
+        fetch(`http://localhost:8080/api/questions/${postId}/answers`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -355,8 +359,8 @@
         })
           .then((response) => {
             if (response.ok) {
-              document.getElementById("comment-content").value = ""; // 입력창 초기화
-              loadComments(); // 댓글 목록 새로고침
+              document.getElementById("answer-content").value = ""; // 입력창 초기화
+              loadAnswers(); // 댓글 목록 새로고침
             } else {
               console.error("댓글 작성 실패:", response.statusText);
               alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");
@@ -366,14 +370,42 @@
       }
 
       // 댓글 삭제
-      function deleteComment(commentId) {
-        fetch(`http://localhost:8080/api/comments/${commentId}`, {
+      function deleteAnswer(answerId) {
+        fetch(`http://localhost:8080/api/answers/${answerId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 세션 쿠키 포함
         })
-          .then(() => {
-            loadComments(); // 댓글 목록 새로고침
+          .then((response) => {
+            if (response.ok) {
+              loadAnswers(); // 댓글 목록 새로고침
+            } else {
+              console.error("댓글 삭제 실패:", response.statusText);
+              alert("댓글 삭제에 실패했습니다. 다시 시도해주세요.");
+            }
           })
           .catch((error) => console.error("댓글 삭제 중 오류 발생:", error));
+      }
+    </script>
+
+    <script>
+      // 세션 저장소에서 로그인된 사용자 정보 가져오기
+      const username = sessionStorage.getItem("username");
+
+      if (username) {
+        // 로그인 상태일 경우 사용자 이름을 표시
+        document.getElementById("username-display").textContent = username;
+
+        // 로그아웃 버튼 클릭 이벤트 추가
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          sessionStorage.removeItem("username"); // 세션 저장소에서 사용자 정보 제거
+          window.location.href = "../index.html"; // 로그아웃 후 메인 페이지로 리다이렉트
+        });
+      } else {
+        // 비로그인 상태일 경우 로그인 페이지로 리다이렉트
+        window.location.href = "/board/page-login.html";
       }
     </script>
   </body>
