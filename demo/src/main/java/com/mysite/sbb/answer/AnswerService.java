@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.user.SiteUser;
+import java.util.List; // List를 임포트
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,8 +40,7 @@ public class AnswerService {
 	public void modify(Answer answer, String content) {
 		answer.setContent(content);
 		answer.setModifyDate(LocalDateTime.now());
-		this.answerRepository.save(answer);
-	}
+		this.answerRepository.save(answer);	}
 
 	public void delete(Answer answer) {
 		this.answerRepository.delete(answer);
@@ -49,5 +49,9 @@ public class AnswerService {
 	public void vote(Answer answer, SiteUser siteUser) {
 		answer.getVoter().add(siteUser);
 		this.answerRepository.save(answer);
+	}
+
+	public List<Answer> getAnswersByQuestionId(Integer questionId) {
+		return answerRepository.findByQuestionId(questionId);
 	}
 }

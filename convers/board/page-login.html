@@ -94,11 +94,18 @@
                 </form>
               </div>
             </div>
-            <div class="right">
+            <div
+              class="right"
+              style="
+                background-image: url('../img/pray.jpg');
+                background-size: cover;
+                background-position: center;
+              "
+            >
               <div class="overlay"></div>
               <div class="content text">
-                <h1 class="heading">Free Bootstrap dashboard template</h1>
-                <p>by The Develovers</p>
+                <h1 class="heading">종교시설 평가 게시판</h1>
+                <p>by Opensource project team 6</p>
               </div>
             </div>
             <div class="clearfix"></div>
@@ -136,11 +143,14 @@
               const data = await response.json();
               alert(data.message); // 로그인 성공 메시지
 
-              // 사용자 아이디를 로컬 저장소에 저장
-              localStorage.setItem("username", username);
+              // 사용자 아이디를 세션 저장소에 저장
+              sessionStorage.setItem("username", username);
 
-              // 메인 페이지로 리다이렉트
-              window.location.href = "http://127.0.0.1:5501/index.html"; // Live Server의 메인 페이지 URL
+              // 이전 페이지 URL 가져오기
+              const previousPage = sessionStorage.getItem("previousPage");
+
+              // 이전 페이지가 존재하면 해당 페이지로 이동, 없으면 index.html로 이동
+              window.location.href = previousPage || "index.html";
             } else {
               const errorText = await response.text();
               alert("로그인 실패: " + errorText);

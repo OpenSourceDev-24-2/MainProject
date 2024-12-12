@@ -315,7 +315,7 @@
     <!-- JavaScript -->
     <script>
       // API 호출하여 질문 데이터를 가져와 테이블에 표시
-      fetch("http://localhost:8080/api/questions")
+      fetch("http://localhost:8080/api/questions?page=0")
         .then((response) => response.json())
         .then((data) => {
           const tableBody = document.getElementById("question-list");
@@ -326,7 +326,10 @@
 
             // 제목 열
             const titleCell = document.createElement("td");
-            titleCell.textContent = question.subject;
+            const titleLink = document.createElement("a");
+            titleLink.href = `question-detail.html?id=${question.id}`;
+            titleLink.textContent = question.subject;
+            titleCell.appendChild(titleLink);
             row.appendChild(titleCell);
 
             // 추천수 열
@@ -420,8 +423,21 @@
           window.location.href = "../index.html"; // 로그아웃 후 메인 페이지로 리다이렉트
         });
       } else {
-        // 비로그인 상태일 경우 로그인 페이지로 리다이렉트
-        window.location.href = "/board/page-login.html";
+        // 비로그인 상태일 경우 사용자 이름을 "Unknown"으로 표시
+        document.getElementById("username-display").textContent = "Unknown";
+
+        // 로그아웃 버튼의 텍스트를 "로그인"으로 설정
+        const loginBtn = document.getElementById("logout-btn");
+        loginBtn.textContent = "로그인";
+
+        // 로그인 버튼 클릭 시 현재 URL을 저장하고 로그인 페이지로 이동
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          // 현재 페이지 URL 저장
+          sessionStorage.setItem("previousPage", window.location.href);
+
+          // 로그인 페이지로 이동
+          window.location.href = "/board/page-login.html";
+        });
       }
     </script>
   </body>
