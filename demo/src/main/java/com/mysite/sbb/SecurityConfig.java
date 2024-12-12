@@ -1,5 +1,6 @@
 package com.mysite.sbb;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +34,7 @@ public class SecurityConfig {
 				.authorizeRequests((requests) -> requests
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers(HttpMethod.DELETE, "/api/answers/**").authenticated() // DELETE 요청 인증 필요
-						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**", "/api/**", "/api/questions/create").permitAll()
+						.requestMatchers("/h2-console/**", "/api/user/**", "/css/**", "/js/**", "/api/**", "/error", "/api/questions/create").permitAll()
 						.anyRequest().authenticated())
 				.csrf((csrf) -> csrf
 						.ignoringRequestMatchers("/h2-console/**", "/api/**")
@@ -44,8 +45,11 @@ public class SecurityConfig {
 						.loginPage("/page-login.html")
 						.loginProcessingUrl("/process-login")
 						.defaultSuccessUrl("/")
-						.failureUrl("/page-login.html?error=true")
-						.permitAll())
+						.failureHandler((request, response, exception) -> {
+							response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 반환
+							response.setContentType("application/json");
+							response.getWriter().write("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
+						})						.permitAll())
 				.logout((logout) -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/")
@@ -67,7 +71,7 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		// 명시적인 Origin 허용 (setAllowedOrigins와 setAllowedOriginPatterns는 함께 사용하지 않습니다)
-		configuration.setAllowedOriginPatterns(List.of("http://127.0.0.1:*"));
+		configuration.setAllowedOriginPatterns(List.of("http://127.0.0.1:*", "http://localhost:8080"));
 
 		// 허용할 HTTP 메서드 추가
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
