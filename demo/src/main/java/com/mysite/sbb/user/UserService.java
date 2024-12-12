@@ -18,9 +18,13 @@ public class UserService {
 
 	public boolean authenticate(String username, String password) {
 		// 사용자 조회
-		SiteUser user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+		Optional<SiteUser> userOpt = userRepository.findByUsername(username);
 
+		if (userOpt.isEmpty()) {
+			return false; // 사용자가 존재하지 않는 경우 false 반환
+		}
+
+		SiteUser user = userOpt.get();
 		// 비밀번호 비교
 		return passwordEncoder.matches(password, user.getPassword());
 	}

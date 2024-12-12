@@ -3,6 +3,7 @@ package com.mysite.sbb.answer;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.user.SiteUser;
 
@@ -30,6 +31,7 @@ public class Answer {
 	private LocalDateTime createDate;
 
 	@ManyToOne
+	@JsonIgnore // 순환 참조 방지
 	private Question question;
 
 	@ManyToOne

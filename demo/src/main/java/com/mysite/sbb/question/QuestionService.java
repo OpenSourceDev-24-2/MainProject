@@ -66,14 +66,16 @@ public class QuestionService {
 		}
 	}
 
-	public void create(String subject, String content, SiteUser user) {
+	public Question create(String subject, String content, SiteUser user) {
 		Question q = new Question();
 		q.setSubject(subject);
 		q.setContent(content);
 		q.setCreateDate(LocalDateTime.now());
 		q.setAuthor(user);
-		this.questionRepository.save(q);
+		Question savedQuestion = this.questionRepository.save(q);
+		return savedQuestion; // 생성된 Question 객체를 반환합니다.
 	}
+
 
 	public void modify(Question question, String subject, String content) {
 		question.setSubject(subject);
