@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      Create Question | Klorofil - Free Bootstrap Dashboard Template
+    </title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <!-- VENDOR CSS -->
+    <link
+      rel="stylesheet"
+      href="assets/vendor/bootstrap/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/vendor/font-awesome/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="assets/vendor/linearicons/style.css" />
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!-- GOOGLE FONTS -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+      rel="stylesheet"
+    />
+    <!-- ICONS -->
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="assets/img/apple-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="assets/img/favicon.png"
+    />
+  </head>
+
+  <body>
+    <!-- WRAPPER -->
+    <div id="wrapper">
+      <!-- NAVBAR -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="brand">
+          <a href="../index.html"
+            ><img src="" alt="회사 로고" class="img-responsive logo"
+          /></a>
+        </div>
+        <div class="container-fluid">
+          <div class="navbar-btn">
+            <button type="button" class="btn-toggle-fullwidth">
+              <i class="lnr lnr-arrow-left-circle"></i>
+            </button>
+          </div>
+          <form class="navbar-form navbar-left"></form>
+          <div id="navbar-menu">
+            <ul class="nav navbar-nav navbar-right">
+              <!-- 우측 상단의 사용자 정보 부분 수정 -->
+              <li class="dropdown">
+                <a
+                  href="#"
+                  class="dropdown-toggle"
+                  data-toggle="dropdown"
+                  id="user-info-link"
+                >
+                  <img
+                    src="assets/img/user.png"
+                    class="img-circle"
+                    alt="Avatar"
+                  />
+                  <span id="username-display">Samuel</span>
+                  <i class="icon-submenu lnr lnr-chevron-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="page-profile.html"
+                      ><i class="lnr lnr-user"></i> <span>My Profile</span></a
+                    >
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="lnr lnr-envelope"></i> <span>Message</span></a
+                    >
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="lnr lnr-cog"></i> <span>Settings</span></a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li style="display: inline-block; margin-left: 10px">
+                <a
+                  href="#"
+                  id="logout-btn"
+                  style="
+                    color: #000000;
+                    font-weight: bold;
+                    text-decoration: none;
+                  "
+                  >로그아웃</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- END NAVBAR -->
+
+      <!-- LEFT SIDEBAR -->
+      <div id="sidebar-nav" class="sidebar">
+        <div class="sidebar-scroll">
+          <nav>
+            <ul class="nav">
+              <li>
+                <a href="mainboard.html" class="active"
+                  ><i class="lnr lnr-home"></i> <span>전체 게시판</span></a
+                >
+              </li>
+              <li>
+                <a href="reviewboard.html" class=""
+                  ><i class="lnr lnr-code"></i> <span>시설리뷰 게시판</span></a
+                >
+              </li>
+              <li>
+                <a href="eventsboard.html" class=""
+                  ><i class="lnr lnr-chart-bars"></i>
+                  <span>봉사/행사 게시판</span></a
+                >
+              </li>
+              <li>
+                <a href="promotionboard.html" class=""
+                  ><i class="lnr lnr-cog"></i> <span>홍보 게시판</span></a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- END LEFT SIDEBAR -->
+
+      <!-- MAIN -->
+      <div class="main">
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+          <div class="container-fluid">
+            <h3 class="page-title">게시글 작성</h3>
+            <div class="panel">
+              <div class="panel-heading">
+                <h3 class="panel-title">새로운 게시글 작성</h3>
+              </div>
+              <div class="panel-body">
+                <form id="create-question-form">
+                  <div class="form-group">
+                    <label for="subject">제목</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="subject"
+                      placeholder="제목을 입력하세요"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea
+                      class="form-control"
+                      id="content"
+                      rows="10"
+                      placeholder="내용을 입력하세요"
+                      required
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    작성 완료
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END MAIN CONTENT -->
+      </div>
+      <!-- END MAIN -->
+    </div>
+    <!-- END WRAPPER -->
+
+    <!-- Javascript -->
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+      // 로컬 저장소에서 로그인된 사용자 정보 가져오기
+      const username = sessionStorage.getItem("username");
+
+      if (username) {
+        // 로그인 상태일 경우 사용자 이름을 표시
+        document.getElementById("username-display").textContent = username;
+
+        // 로그아웃 버튼 클릭 이벤트 추가
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          sessionStorage.removeItem("username"); // 로컬 저장소에서 사용자 정보 제거
+          window.location.href = "../index.html"; // 로그아웃 후 메인 페이지로 리다이렉트
+        });
+      } else {
+        // 비로그인 상태일 경우 로그인 페이지로 리다이렉트
+        window.location.href = "/board/page-login.html";
+      }
+
+      // 게시글 작성 폼 제출 이벤트 처리
+      document
+        .getElementById("create-question-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // 기본 페이지 새로고침 방지
+
+          const subject = document.getElementById("subject").value;
+          const content = document.getElementById("content").value;
+
+          // JSON 형태로 데이터 준비
+          const data = {
+            subject: subject,
+            content: content,
+          };
+
+          // API 호출하여 질문 생성
+          fetch("http://localhost:8080/api/questions/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            credentials: "include", // 쿠키를 포함하여 요청 보내기
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.text().then((text) => {
+                  throw new Error(
+                    `${response.status} - ${response.statusText}: ${text}`
+                  );
+                });
+              }
+              return response.json();
+            })
+            .then(() => {
+              alert("게시글 작성이 완료되었습니다.");
+              window.location.href = "mainboard.html";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(
+                `게시글 작성 중 오류가 발생했습니다. 오류 내용: ${error.message}`
+              );
+            });
+        });
+    </script>
+  </body>
+</html>
