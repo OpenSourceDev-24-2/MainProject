@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Open Source Project</title>
+    <meta name="description" content="company is a free job board template" />
+    <meta name="author" content="Ohidul" />
+    <meta name="keyword" content="html, css, bootstrap, job-board" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/fontello.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.css" />
+    <link rel="stylesheet" href="/css/owl.theme.css" />
+    <link rel="stylesheet" href="/css/owl.transitions.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/responsive.css" />
+    <script src="/js/vendor/modernizr-2.6.2.min.js"></script>
+  </head>
+  <body>
+    <div id="preloader">
+      <div id="status">&nbsp;</div>
+    </div>
+
+    <!-- Body content -->
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#bs-example-navbar-collapse-1"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">
+            <img src="/img/logo.png" alt="홈으로 이동" />
+          </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div class="button navbar-right">
+            <ul id="user-info" class="nav navbar-nav"></ul>
+          </div>
+
+          <!-- 기존 HTML 코드에서 각 게시판 링크 부분 수정 -->
+          <ul class="main-nav nav navbar-nav navbar-left">
+            <li class="wow fadeInDown" data-wow-delay="0.1s">
+              <a href="#" onclick="goToBoard('/board/mainboard.html')"
+                >전체 게시판</a
+              >
+            </li>
+            <li class="wow fadeInDown" data-wow-delay="0.1s">
+              <a href="#" onclick="goToBoard('/board/reviewboard.html')"
+                >시설 리뷰 게시판</a
+              >
+            </li>
+            <li class="wow fadeInDown" data-wow-delay="0.2s">
+              <a href="#" onclick="goToBoard('/board/eventsboard.html')"
+                >봉사/이벤트 게시판</a
+              >
+            </li>
+            <li class="wow fadeInDown" data-wow-delay="0.3s">
+              <a href="#" onclick="goToBoard('/board/promotionboard.html')"
+                >홍보 게시판</a
+              >
+            </li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+
+    <div class="slider-area">
+      <div class="slider">
+        <div id="bg-slider" class="owl-carousel owl-theme">
+          <div class="item">
+            <img src="/img/Protestant.jpg" alt="Mirror Edge" />
+          </div>
+          <div class="item">
+            <img src="/img/temple.jpg" alt="The Last of us" />
+          </div>
+          <div class="item">
+            <img src="/img/Catholic.jpg" alt="GTA V" />
+          </div>
+        </div>
+      </div>
+      <div class="container slider-content">
+        <div class="row">
+          <div
+            class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12"
+          >
+            <h2>메인</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi
+              deserunt deleniti, ullam commodi sit ipsam laboriosam velit
+              adipisci quibusdam aliquam teneturo!
+            </p>
+            <div class="search-form wow pulse" data-wow-delay="0.8s">
+              <form action="" class="form-inline">
+                <div class="form-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="검색어를 입력하세요."
+                  />
+                </div>
+                <div class="form-group">
+                  <select name="" id="" class="form-control">
+                    <option>지역을 선택하세요</option>
+                    <!--<option selected>서울</option>-->
+                    <option>서울특별시</option>
+                    <option>부산광역시</option>
+                    <option>대구광역시</option>
+                    <option>인천광역시</option>
+                    <option>광주광역시</option>
+                    <option>대전광역시</option>
+                    <option>울산광역시</option>
+                    <option>세종특별자치시</option>
+                    <option>경기도</option>
+                    <option>강원도</option>
+                    <option>충청북도</option>
+                    <option>충청남도</option>
+                    <option>전라북도</option>
+                    <option>전라남도</option>
+                    <option>경상북도</option>
+                    <option>경상남도</option>
+                    <option>제주특별자치도</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <select name="" id="" class="form-control">
+                    <option>종교를 선택하세요.</option>
+                    <!--<option selected>기독교 (개신교)</option>-->
+                    <option>기독교 (개신교)</option>
+                    <option>불교</option>
+                    <option>천주교 (가톨릭)</option>
+                    <option>원불교</option>
+                  </select>
+                </div>
+                <input type="submit" class="btn" value="Search" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="container">
+        <div
+          class="row page-title text-center wow zoomInDown"
+          data-wow-delay="1s"
+        >
+          <h5>지도를 통해</h5>
+          <h2>시설 위치 찾기</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae
+            illum dolorem, rem officia, id explicabo sapiente
+          </p>
+        </div>
+      </div>
+      <hr />
+      <hr />
+      <hr />
+    </div>
+    <div class="footer-area">
+      <div class="container">
+        <div class="row footer-copy">
+          <p>
+            Shared by <i class="fa fa-love"></i
+            ><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+      window.jQuery ||
+        document.write(
+          '<script src="js/vendor/jquery-1.10.2.min.js"><\/script>'
+        );
+    </script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/wow.js"></script>
+    <script src="/js/main.js"></script>
+    <!-- JavaScript 코드 삽입 -->
+    <script>
+      // API 호출
+      fetch("http://localhost:8080/api/questions")
+        .then((response) => response.json())
+        .then((data) => {
+          const list = document.getElementById("question-list");
+          data.forEach((question) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = question.title; // 백엔드에서 반환된 데이터의 필드에 맞게 수정
+            list.appendChild(listItem);
+          });
+        })
+        .catch((error) => console.error("Error:", error));
+    </script>
+    <script>
+      // 세션 저장소에서 로그인된 사용자 정보 가져오기
+      const username = sessionStorage.getItem("username");
+      const userInfo = document.getElementById("user-info");
+
+      if (username) {
+        // 로그인 상태일 경우 사용자 이름과 로그아웃 버튼 표시
+        userInfo.innerHTML = `
+          <li style="display: inline-block; margin-right: 15px;">
+            <a href="#" class="username" style="color: skyblue; font-weight: bold; text-transform: none;">${username}님</a>
+          </li>
+          <li style="display: inline-block;">
+            <a href="#" id="logout-btn" class="logout-btn" style="border-radius: 10px; border: 1px solid #ccc; ">로그아웃</a>
+          </li>
+        `;
+
+        // 로그아웃 버튼 클릭 이벤트 추가
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          sessionStorage.removeItem("username"); // 세션 저장소에서 사용자 정보 제거
+          location.reload(); // 페이지 새로고침
+        });
+      } else {
+        // 비로그인 상태일 경우 로그인 및 회원가입 버튼 표시
+        userInfo.innerHTML = `
+          <li><a
+              href="/board/page-login.html"
+              id="login-btn"
+              class="navbar-btn nav-button wow bounceInRight login"
+              data-wow-delay="0.8s"
+              style="text-decoration: none; display: inline-block; text-align: center;"
+              >
+              로그인
+            </a></li>
+            <li><a
+              href="/board/register.html"
+              class="navbar-btn nav-button wow fadeInRight"
+              data-wow-delay="0.6s"
+              style="text-decoration: none; display: inline-block; text-align: center;"
+              >
+              회원가입
+              </a><li>
+        `;
+      }
+    </script>
+
+    <script>
+      function goToBoard(boardUrl) {
+        // 세션 저장소에서 로그인된 사용자 정보 가져오기
+        const username = sessionStorage.getItem("username");
+
+        window.location.href = boardUrl;
+      }
+
+      // 로그인 버튼 클릭 시 현재 URL을 저장하고 로그인 페이지로 이동
+      document.getElementById("login-btn").addEventListener("click", () => {
+        // 현재 페이지 URL 저장
+        sessionStorage.setItem("previousPage", window.location.href);
+
+        // 로그인 페이지로 이동
+        window.location.href = "/board/page-login.html";
+      });
+    </script>
+  </body>
+</html>

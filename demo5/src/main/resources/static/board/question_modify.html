@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>게시글 수정 페이지</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/vendor/linearicons/style.css" />
+    <link rel="stylesheet" href="assets/vendor/chartist/css/chartist-custom.css" />
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+    <link rel="stylesheet" href="assets/css/demo.css" />
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet" />
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png" />
+    <style>
+        /* 패널 헤더 스타일링 */
+        .panel-headline {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+<!-- WRAPPER -->
+<div id="wrapper">
+    <!-- NAVBAR -->
+    <!-- (위의 navbar 코드와 동일) -->
+    <!-- ... -->
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="container-fluid">
+                <h3 class="page-title">게시글 수정</h3>
+
+                <!-- 게시글 수정 폼 -->
+                <div class="panel panel-headline">
+                    <div class="panel-body">
+                        <form id="modify-form">
+                            <div class="form-group">
+                                <label for="subject">제목</label>
+                                <input type="text" class="form-control" id="subject" placeholder="제목을 입력하세요" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="content">내용</label>
+                                <textarea id="content" class="form-control" rows="5" placeholder="내용을 입력하세요" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">수정 완료</button>
+                            <button type="button" class="btn btn-default" id="cancel-btn">취소</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MAIN CONTENT -->
+    </div>
+    <!-- END MAIN -->
+    <div class="clearfix"></div>
+    <footer>
+        <div class="container-fluid">
+            <p class="copyright">
+                Shared by <i class="fa fa-love"></i>
+                <a href="https://bootstrapthemes.co">BootstrapThemes</a>
+            </p>
+        </div>
+    </footer>
+</div>
+<!-- END WRAPPER -->
+
+<!-- Javascript -->
+<script src="assets/vendor/jquery/jquery.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+<script src="assets/vendor/chartist/js/chartist.min.js"></script>
+<script src="assets/scripts/klorofil-common.js"></script>
+
+<script>
+    // URL에서 게시글 ID 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get("id");
+
+    // 현재 로그인된 사용자
+    const currentUsername = sessionStorage.getItem("username");
+
+    // 게시글 수정 폼 초기화
+    document.addEventListener("DOMContentLoaded", () => {
+        // 게시글 상세 정보 가져오기
+        fetch(`http://localhost:8080/api/questions/${postId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                // 게시글 제목 및 내용 채우기
+                document.getElementById("subject").value = data.subject;
+                document.getElementById("content").value = data.content;
+
+                // 게시글 작성자와 현재 사용자 비교
+                if (currentUsername && data.author && currentUsername === data.author.username) {
+                    // 현재 사용자가 작성자라면 수정 폼 표시
+                } else {
+                    alert("수정 권한이 없습니다.");
+                    window.location.href = "question_detail.html?id=" + postId;
+                }
+            })
+            .catch((error) => {
+                console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+                alert("게시글을 불러오는 데 실패했습니다.");
+                window.location.href = "mainboard.html";
+            });
+
+        // 수정 폼 제출 이벤트 등록
+        document.getElementById("modify-form").addEventListener("submit", (event) => {
+            event.preventDefault(); // 폼 기본 동작 방지
+            modifyPost();
+        });
+
+        // 취소 버튼 클릭 이벤트 등록
+        document.getElementById("cancel-btn").addEventListener("click", () => {
+            window.location.href = `question_detail.html?id=${postId}`;
+        });
+    });
+
+    // 게시글 수정
+    function modifyPost() {
+        const subject = document.getElementById("subject").value.trim();
+        const content = document.getElementById("content").value.trim();
+
+        if (!subject || !content) {
+            alert("제목과 내용을 모두 입력해주세요.");
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/questions/${postId}`, {
+            method: "PUT", // 또는 "PATCH" 사용 가능
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ subject: subject, content: content }),
+            credentials: "include", // 세션 쿠키 포함
+        })
+            .then(async (response) => {
+                if (response.ok) { // 200-299 상태 코드 확인
+                    const data = await response.json();
+                    alert(data.message || "게시글이 성공적으로 수정되었습니다.");
+                    window.location.href = "question_detail.html?id=" + postId;
+                } else {
+                    const data = await response.json();
+                    console.error("게시글 수정 실패:", data.message || response.statusText);
+                    alert(`게시글 수정에 실패했습니다. 이유: ${data.message || response.statusText}`);
+                }
+            })
+            .catch((error) => {
+                console.error("게시글 수정 중 오류 발생:", error);
+                alert(`게시글 수정 중 오류가 발생했습니다. 오류 내용: ${error.message}`);
+            });
+    }
+</script>
+</body>
+</html>
